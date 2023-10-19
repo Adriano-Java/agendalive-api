@@ -17,12 +17,13 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping(value = "/lives")
 public class LiveController {
 
     @Autowired
     LiveService liveService;
 
-    @GetMapping("/lives")
+    @GetMapping
     public ResponseEntity<Page<LiveDocument>> getAllLives(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                                           @RequestParam(required = false) String flag){
         Page<LiveDocument> livePage = liveService.findAll(pageable, flag);
@@ -33,7 +34,7 @@ public class LiveController {
         }
     }
 
-    @GetMapping("/lives/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<LiveDocument> getOneLive(@PathVariable(value="id") String id){
         Optional<LiveDocument> liveO = liveService.findById(id);
         if(!liveO.isPresent()) {
@@ -43,13 +44,13 @@ public class LiveController {
         }
     }
 
-    @PostMapping("/lives")
+    @PostMapping
     public ResponseEntity<LiveDocument> saveLive(@RequestBody @Valid LiveDocument live) {
         live.setRegistrationDate(LocalDateTime.now());
         return new ResponseEntity<LiveDocument>(liveService.save(live), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/lives/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteLive(@PathVariable(value="id") String id) {
         Optional<LiveDocument> liveO = liveService.findById(id);
         if(!liveO.isPresent()) {
@@ -60,7 +61,7 @@ public class LiveController {
         }
     }
 
-    @PutMapping("/lives/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<LiveDocument> updateLive(@PathVariable(value="id") String id,
                                                       @RequestBody @Valid LiveDocument liveDocument) {
         Optional<LiveDocument> liveO = liveService.findById(id);
